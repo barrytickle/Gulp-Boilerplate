@@ -8,30 +8,39 @@ var gulp = require('gulp'),
     minify = require('gulp-clean-css'),
     uglify = require('gulp-uglify'),
     util = require('gulp-util'),
-    rename = require('gulp-rename');
+    rename = require('gulp-rename'),
+    del = require('del');
 
+
+gulp.task('clean', function(){
+  notify({message: 'Clean initiated'});
+  console.log('clean initiated');
+  return del(['dist/css/**', 'app/css/**']);
+});
 
   //SCCS Compile
-  gulp.task('sass', () =>
-    sass('app/scss/*.scss', {style: 'expanded'})
+  gulp.task('sass-list', () =>
+      sass('app/scss/*.scss', {style: 'expanded'})
       .on('error', sass.logError)
       .pipe(gulp.dest('app/css/'), {overwrite: true})
       .pipe(notify({message: 'SCCS task complete innit!'}))
 );
 
-  //minify CSS
+
+//minify CSS
   gulp.task('minify', function() {
     var cssFiles = ['app/css/*.css'];
 
-    gulp.src(cssFiles)
+   return gulp.src(cssFiles)
     .pipe(concat('main.css'))
     .pipe(minify())
     .pipe(gulp.dest('dist/css'), {overwrite: true})
     .pipe(notify({message: 'Task complete innit!'}));
   });
 
+gulp.task('clean-then-sass', gulp.series('clean', 'sass-list', 'minify'));
 
-  //JS Files
+//JS Files
   gulp.task('uglify', function() {
     var jsFiles = ['app/js/*.js'];
 
@@ -47,16 +56,13 @@ var gulp = require('gulp'),
     .pipe(notify({message: 'Task complete innit!'}));
   });
 
-
   //watch
   gulp.task('watch', function() {
-
-    //css files
-    gulp.watch('app/css/*', gulp.series('minify'));
-
+    
     //js files
     gulp.watch('app/js/*', gulp.series('uglify'));
 
     //sass files
-    gulp.watch('app/scss/**/*', gulp.series('sass'));
+    gulp.watch('app/scss/**/*', gulp.series('clean-then-sass'));
   });
+

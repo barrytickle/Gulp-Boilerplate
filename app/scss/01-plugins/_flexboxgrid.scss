@@ -78,6 +78,10 @@ $name: xs;
   @include flex-basis(auto);
 }
 
+.row-#{$name}{
+  @include flex-direction(row);
+}
+
 .col-dir-#{$name}{
   @include flex-direction(column);
 }
@@ -100,6 +104,15 @@ $name: xs;
     margin-left: 100% / $grid-columns * $i;
   }
 }
+
+.row-#{$name}{
+  @include flex-direction(row);
+}
+
+.col-#{$name}{
+  @include flex-direction(column);
+}
+
 .col-#{$name} {
   @include flex-grow(1);
   @include flex-basis(0);
@@ -156,6 +169,10 @@ $name: xs;
   @media only screen and (min-width: $size) {
     .container {
       width: $container;
+    }
+
+    .row-#{$name}{
+      @include flex-direction(row);
     }
 
     .col-#{$name} {
