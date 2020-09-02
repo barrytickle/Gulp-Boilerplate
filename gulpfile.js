@@ -18,6 +18,8 @@ gulp.task('clean', function(){
   return del(['dist/css/**', 'app/css/**']);
 });
 
+
+
   //SCCS Compile
   gulp.task('sass-list', () =>
       sass('app/scss/*.scss', {style: 'expanded'})
@@ -25,6 +27,14 @@ gulp.task('clean', function(){
       .pipe(gulp.dest('app/css/'), {overwrite: true})
       .pipe(notify({message: 'SCCS task complete innit!'}))
 );
+
+gulp.task('clean-js', function(){
+    notify({
+      message:'Javascript clean initiated'
+    });
+    return del(['dist/js/***']);
+});
+
 
 
 //minify CSS
@@ -40,11 +50,12 @@ gulp.task('clean', function(){
 
 gulp.task('clean-then-sass', gulp.series('clean', 'sass-list', 'minify'));
 
+
 //JS Files
   gulp.task('uglify', function() {
     var jsFiles = ['app/js/*.js'];
 
-    gulp.src(jsFiles)
+    return gulp.src(jsFiles)
     .pipe(order([
       'jquery.min.js',
       '*',
@@ -56,11 +67,14 @@ gulp.task('clean-then-sass', gulp.series('clean', 'sass-list', 'minify'));
     .pipe(notify({message: 'Task complete innit!'}));
   });
 
-  //watch
+gulp.task('clean-then-uglify', gulp.series('clean-js', 'uglify'));
+
+
+//watch
   gulp.task('watch', function() {
-    
+
     //js files
-    gulp.watch('app/js/*', gulp.series('uglify'));
+    gulp.watch('app/js/*', gulp.series('clean-then-uglify'));
 
     //sass files
     gulp.watch('app/scss/**/*', gulp.series('clean-then-sass'));
