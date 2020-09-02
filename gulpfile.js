@@ -15,7 +15,7 @@ var gulp = require('gulp'),
   gulp.task('sass', () =>
     sass('app/scss/*.scss', {style: 'expanded'})
       .on('error', sass.logError)
-      .pipe(gulp.dest('app/css/'))
+      .pipe(gulp.dest('app/css/'), {overwrite: true})
       .pipe(notify({message: 'SCCS task complete innit!'}))
 );
 
@@ -26,7 +26,7 @@ var gulp = require('gulp'),
     gulp.src(cssFiles)
     .pipe(concat('main.css'))
     .pipe(minify())
-    .pipe(gulp.dest('dist/css'))
+    .pipe(gulp.dest('dist/css'), {overwrite: true})
     .pipe(notify({message: 'Task complete innit!'}));
   });
 
